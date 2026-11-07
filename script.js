@@ -20,6 +20,8 @@ function validateRepositories(data) {
   }
 
   return data.map((repository) => {
+function renderRepositories(repositories) {
+  const validatedRepositories = repositories.map((repository) => {
     if (
       repository === null ||
       typeof repository !== "object" ||
@@ -61,6 +63,9 @@ function renderRepositories() {
   const fragment = document.createDocumentFragment();
 
   for (const repository of matches) {
+  const fragment = document.createDocumentFragment();
+
+  for (const repository of validatedRepositories) {
     const item = document.createElement("li");
     item.className = "repository-card";
 
@@ -93,6 +98,9 @@ function renderRepositories() {
       ? `${matches.length} of ${repositories.length} ${resultLabel} match your search.`
       : `${repositories.length} starred ${resultLabel}.`;
   }
+  listStatus.textContent = repositories.length
+    ? `${repositories.length} starred ${repositories.length === 1 ? "repository" : "repositories"}`
+    : "No starred repositories yet.";
   listStatus.dataset.state = "loaded";
 }
 
@@ -109,6 +117,14 @@ async function loadRepositories() {
   } catch (error) {
     const message = error instanceof Error ? error.message : "An unexpected error occurred.";
     listStatus.textContent = `Unable to load starred repositories: ${message}`;
+    const repositories = await response.json();
+    if (!Array.isArray(repositories)) {
+      throw new Error("Repository data must be a list.");
+    }
+
+    renderRepositories(repositories);
+  } catch (error) {
+    listStatus.textContent = `Unable to load starred repositories: ${error.message}`;
     listStatus.dataset.state = "error";
   }
 }
