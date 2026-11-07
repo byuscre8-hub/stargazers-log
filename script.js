@@ -1,5 +1,7 @@
 const repositoryList = document.querySelector("#repository-list");
 const listStatus = document.querySelector("#list-status");
+const searchInput = document.querySelector("#repository-search");
+let repositories = [];
 
 function formatStarredDate(value) {
   const date = new Date(value);
@@ -12,6 +14,12 @@ function formatStarredDate(value) {
   }).format(date)}`;
 }
 
+function validateRepositories(data) {
+  if (!Array.isArray(data)) {
+    throw new Error("Repository data must be a list.");
+  }
+
+  return data.map((repository) => {
 function renderRepositories(repositories) {
   const validatedRepositories = repositories.map((repository) => {
     if (
@@ -44,6 +52,17 @@ function renderRepositories(repositories) {
 
     return { ...repository, url: url.href };
   });
+}
+
+function renderRepositories() {
+  const query = searchInput.value.trim().toLocaleLowerCase();
+  const matches = repositories.filter((repository) => {
+    const searchableText = `${repository.name} ${repository.description}`.toLocaleLowerCase();
+    return searchableText.includes(query);
+  });
+  const fragment = document.createDocumentFragment();
+
+  for (const repository of matches) {
   const fragment = document.createDocumentFragment();
 
   for (const repository of validatedRepositories) {
@@ -69,6 +88,16 @@ function renderRepositories(repositories) {
   }
 
   repositoryList.replaceChildren(fragment);
+  if (matches.length === 0) {
+    listStatus.textContent = query
+      ? "No repositories match your search."
+      : "No starred repositories yet.";
+  } else {
+    const resultLabel = matches.length === 1 ? "repository" : "repositories";
+    listStatus.textContent = query
+      ? `${matches.length} of ${repositories.length} ${resultLabel} match your search.`
+      : `${repositories.length} starred ${resultLabel}.`;
+  }
   listStatus.textContent = repositories.length
     ? `${repositories.length} starred ${repositories.length === 1 ? "repository" : "repositories"}`
     : "No starred repositories yet.";
@@ -82,6 +111,12 @@ async function loadRepositories() {
       throw new Error(`Could not load repositories (HTTP ${response.status}).`);
     }
 
+    repositories = validateRepositories(await response.json());
+    searchInput.disabled = false;
+    renderRepositories();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "An unexpected error occurred.";
+    listStatus.textContent = `Unable to load starred repositories: ${message}`;
     const repositories = await response.json();
     if (!Array.isArray(repositories)) {
       throw new Error("Repository data must be a list.");
@@ -94,4 +129,5 @@ async function loadRepositories() {
   }
 }
 
+searchInput.addEventListener("input", renderRepositories);
 loadRepositories();

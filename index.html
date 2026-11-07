@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Browse and search a log of starred repositories.">
     <meta name="description" content="A log of starred repositories.">
     <title>Stargazers log</title>
     <link rel="stylesheet" href="style.css">
@@ -17,6 +18,18 @@
       </header>
       <section aria-labelledby="repositories-heading">
         <h2 id="repositories-heading">Starred repositories</h2>
+        <label for="repository-search">Search repositories</label>
+        <input
+          id="repository-search"
+          class="search-input"
+          type="search"
+          placeholder="Search by name or description"
+          autocomplete="off"
+          disabled
+        >
+        <p id="list-status" class="list-status" role="status" aria-live="polite">
+          Loading repositories…
+        </p>
         <p id="list-status" class="list-status" role="status" aria-live="polite">Loading repositories…</p>
         <ul id="repository-list" class="repository-list" aria-describedby="list-status"></ul>
       </section>

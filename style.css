@@ -59,6 +59,35 @@ h2 {
   font-size: 1.25rem;
 }
 
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.search-input {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  margin-bottom: 1rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #aeb8cc;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+
+.search-input:focus-visible {
+  outline: 3px solid #8798e4;
+  outline-offset: 2px;
+}
+
+.search-input:disabled {
+  background: #eef0f5;
+  cursor: wait;
+}
+
 .list-status {
   min-height: 1.5rem;
   margin-bottom: 0.75rem;
