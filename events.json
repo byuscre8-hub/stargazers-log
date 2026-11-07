@@ -1,0 +1,26 @@
+[
+  {
+    "name": "freeCodeCamp/freeCodeCamp",
+    "description": "Open-source curriculum and community for learning to code.",
+    "url": "https://github.com/freeCodeCamp/freeCodeCamp",
+    "starred_at": "2025-11-18T14:30:00Z"
+  },
+  {
+    "name": "sindresorhus/awesome",
+    "description": "A curated list of awesome lists, resources, and tools.",
+    "url": "https://github.com/sindresorhus/awesome",
+    "starred_at": "2025-10-04T09:15:00Z"
+  },
+  {
+    "name": "neovim/neovim",
+    "description": "Hyperextensible Vim-based text editor.",
+    "url": "https://github.com/neovim/neovim",
+    "starred_at": "2025-08-22T18:45:00Z"
+  },
+  {
+    "name": "axios/axios",
+    "description": "Promise-based HTTP client for the browser and Node.js.",
+    "url": "https://github.com/axios/axios",
+    "starred_at": "2025-06-11T12:00:00Z"
+  }
+]
