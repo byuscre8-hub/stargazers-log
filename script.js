@@ -13,10 +13,10 @@ function formatStarredDate(value) {
 }
 
 function renderRepositories(repositories) {
-  repositoryList.replaceChildren();
-
-  for (const repository of repositories) {
+  const validatedRepositories = repositories.map((repository) => {
     if (
+      repository === null ||
+      typeof repository !== "object" ||
       typeof repository.name !== "string" ||
       typeof repository.description !== "string" ||
       typeof repository.url !== "string"
@@ -24,6 +24,29 @@ function renderRepositories(repositories) {
       throw new Error("Repository data is missing a name, description, or URL.");
     }
 
+    let url;
+    try {
+      url = new URL(repository.url);
+    } catch {
+      throw new Error("Repository data contains an invalid URL.");
+    }
+
+    if (
+      url.origin !== "https://github.com" ||
+      url.username ||
+      url.password ||
+      !/^\/[^/]+\/[^/]+\/?$/.test(url.pathname) ||
+      url.search ||
+      url.hash
+    ) {
+      throw new Error("Repository URLs must point to a GitHub repository.");
+    }
+
+    return { ...repository, url: url.href };
+  });
+  const fragment = document.createDocumentFragment();
+
+  for (const repository of validatedRepositories) {
     const item = document.createElement("li");
     item.className = "repository-card";
 
@@ -42,9 +65,10 @@ function renderRepositories(repositories) {
     date.textContent = formatStarredDate(repository.starred_at);
 
     item.append(link, description, date);
-    repositoryList.append(item);
+    fragment.append(item);
   }
 
+  repositoryList.replaceChildren(fragment);
   listStatus.textContent = repositories.length
     ? `${repositories.length} starred ${repositories.length === 1 ? "repository" : "repositories"}`
     : "No starred repositories yet.";
